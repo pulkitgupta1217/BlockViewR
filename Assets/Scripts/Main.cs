@@ -39,6 +39,7 @@ public class Main : MonoBehaviour {
 
     void screenshot(int z, List<Transform> objects)
     {
-        Application.CaptureScreenshot("Level " + z+".png");
+        Debug.Log("SS");
+        //Application.CaptureScreenshot("Level " + z+".png");
     }
 }

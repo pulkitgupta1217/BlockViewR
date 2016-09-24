@@ -40,10 +40,10 @@ public class Player : MonoBehaviour {
         lastObjs = new List<GameObject>();
         changeHand();
     }
-    bool rHorizVertDown = false, rightTriggerDown = false, horizDPadDown = false, vertDPad = false, leftTriggerDown = false;
+    bool horizVertDown = false, rightTriggerDown = false, horizDPadDown = false, vertDPad = false;
 	// Update is called once per frame
 	void Update () {
-        float horizontal = Input.GetAxis("Horizontal");
+        float horizontal = Input.GetAxis("RHorizontal");
         if (Mathf.Abs(horizontal) < .3f)
         {
             horizontal = 0;
@@ -58,52 +58,45 @@ public class Player : MonoBehaviour {
         //--------------------------------------------
         //move position of hand by increments of 1
         //x-axis
-        if (Input.GetAxisRaw("RHorizontal") != 0 && !rHorizVertDown)
+        if (!horizVertDown && Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.3f)
         {
             int round = 0;
-            if (Input.GetAxisRaw("RHorizontal") > 0)
+            if (Input.GetAxisRaw("Horizontal") > 0)
             {
                 round = 1;
-            } else if (Input.GetAxisRaw("RHorizontal") < 0)
+            } else if (Input.GetAxisRaw("Horizontal") < 0)
             {
                 round = -1;
             }
             handTransform.position += new Vector3(Mathf.Round(Mathf.Cos(Mathf.Deg2Rad*theta)), 0, (Mathf.Abs(Mathf.Round(Mathf.Cos(Mathf.Deg2Rad * theta)))==1) ? 0 : Mathf.Round(Mathf.Sin(Mathf.Deg2Rad * theta))) * round;
-            rHorizVertDown = true;
-        }
-
-        //y-axis
-        if (Input.GetAxisRaw("RVertical") != 0 && !rHorizVertDown)
+            horizVertDown = true;
+        } else if (!horizVertDown && Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0.3f)
         {
+            //y-axis
             int round = 0;
-            if (Input.GetAxisRaw("RVertical") > 0)
+            if (Input.GetAxisRaw("Vertical") > 0)
             {
                 round = 1;
             }
-            else if (Input.GetAxisRaw("RVertical") < 0)
+            else if (Input.GetAxisRaw("Vertical") < 0)
             {
                 round = -1;
             }
-            handTransform.position += new Vector3(Mathf.Round(Mathf.Sin(-Mathf.Deg2Rad * theta)), 0, (Mathf.Abs(Mathf.Round(Mathf.Sin(-Mathf.Deg2Rad * theta))) == 1) ? 0 : Mathf.Round(Mathf.Cos(Mathf.Deg2Rad * theta))) * round;
-            rHorizVertDown = true;
+            handTransform.position += new Vector3(Mathf.Round(Mathf.Sin(Mathf.Deg2Rad * theta)), 0, (Mathf.Abs(Mathf.Round(Mathf.Sin(Mathf.Deg2Rad * theta))) == 1) ? 0 : -Mathf.Round(Mathf.Cos(Mathf.Deg2Rad * theta))) * round;
+            horizVertDown = true;
         }
-        if (Input.GetAxisRaw("RVertical") == 0 && Input.GetAxisRaw("RHorizontal") == 0)
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) < 0.3f && Mathf.Abs(Input.GetAxisRaw("Horizontal")) < 0.3f)
         {
-            rHorizVertDown = false;
+            horizVertDown = false;
         }
 
         //z-axis
         if (Input.GetButtonDown("RightBumper"))
         {
             handTransform.position += 1.2f * Vector3.up;
-        } else if (handTransform.position.y > 0 && Input.GetAxisRaw("RightTrigger") < -0.3 && !rightTriggerDown)
+        } else if (handTransform.position.y > 0 && Input.GetButtonDown("LeftBumper"))
         {
             handTransform.position += 1.2f*Vector3.down;
-            rightTriggerDown = true;
-        }
-        if (Input.GetAxisRaw("RightTrigger") >=-0.3)
-        {
-            rightTriggerDown = false;
         }
         //--------------------------------------------
         //change the lego in hand
@@ -176,19 +169,23 @@ public class Player : MonoBehaviour {
             legoRotation = Quaternion.identity;
         }
 
+        //zoom
+        if (Input.GetAxisRaw("RightTrigger") > 0.3f)
+        {
+            transform.Translate(-Vector3.forward * 3f * Time.deltaTime);
+        } else if (Input.GetAxisRaw("RightTrigger") < -0.3f)
+        {
+            transform.Translate(Vector3.forward * 3f * Time.deltaTime);
+        }
+
         // scan
-        if (Input.GetAxisRaw("RightTrigger") > 0.3f && !leftTriggerDown)
+        if (Input.GetButtonDown("Menu") )
         {
             GameObject.Find("Model").GetComponent<Main>().scan();
-            leftTriggerDown = true;
-        }
-        if (Input.GetAxisRaw("RightTrigger") <= 0.3)
-        {
-            leftTriggerDown = false;
         }
 
         //delete object
-        if (Input.GetButtonDown("LeftBumper") && lastObjs.Count > 0)
+        if (Input.GetButtonDown("BButton") && lastObjs.Count > 0)
         {
             Destroy(lastObjs[lastObjs.Count - 1]);
             lastObjs.RemoveAt(lastObjs.Count - 1);
