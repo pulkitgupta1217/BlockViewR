@@ -16,10 +16,15 @@ public class Player : MonoBehaviour {
         handTransform = GameObject.Find("Hand").transform;
         planeTransform = GameObject.Find("Model").transform;
     }
-    bool rhorizontalDown = false;
+    bool rHorizontalDown = false, rVerticalDown = false;
 	// Update is called once per frame
 	void Update () {
         float horizontal = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(horizontal) < .3f)
+        {
+            horizontal = 0;
+        }
+        Debug.Log(horizontal);
         theta += 45 * horizontal * Time.deltaTime;
         //Debug.Log(new Vector3(radius * Mathf.Sin(Mathf.Deg2Rad * theta), 0, -radius * Mathf.Cos(Mathf.Deg2Rad * theta)));
         transform.position = new Vector3(radius*Mathf.Sin(Mathf.Deg2Rad*theta),3.34f, -radius*Mathf.Cos(Mathf.Deg2Rad*theta));
@@ -29,7 +34,8 @@ public class Player : MonoBehaviour {
         }
 
         //move position of hand by increments of 1
-        if (Input.GetAxisRaw("RHorizontal") != 0 && !rhorizontalDown)
+        //horizontal
+        if (Input.GetAxisRaw("RHorizontal") != 0 && !rHorizontalDown)
         {
             int round = 0;
             if (Input.GetAxisRaw("RHorizontal") > 0)
@@ -39,13 +45,34 @@ public class Player : MonoBehaviour {
             {
                 round = -1;
             }
-            handTransform.position += Vector3.right * round;
-            rhorizontalDown = true;
+            handTransform.position += new Vector3(Mathf.Round(Mathf.Cos(Mathf.Deg2Rad*theta)), 0, (Mathf.Abs(Mathf.Round(Mathf.Cos(Mathf.Deg2Rad * theta)))==1) ? 0 : Mathf.Round(Mathf.Sin(Mathf.Deg2Rad * theta))) * round;
+            rHorizontalDown = true;
         }
         if (Input.GetAxisRaw("RHorizontal") == 0)
         {
-            rhorizontalDown = false;
+            rHorizontalDown = false;
         }
+
+        //vertical
+        if (Input.GetAxisRaw("RVertical") != 0 && !rVerticalDown)
+        {
+            int round = 0;
+            if (Input.GetAxisRaw("RVertical") > 0)
+            {
+                round = 1;
+            }
+            else if (Input.GetAxisRaw("RVertical") < 0)
+            {
+                round = -1;
+            }
+            handTransform.position += new Vector3(Mathf.Round(Mathf.Sin(-Mathf.Deg2Rad * theta)), 0, (Mathf.Abs(Mathf.Round(Mathf.Sin(-Mathf.Deg2Rad * theta))) == 1) ? 0 : Mathf.Round(Mathf.Cos(Mathf.Deg2Rad * theta))) * round;
+            rVerticalDown = true;
+        }
+        if (Input.GetAxisRaw("RVertical") == 0)
+        {
+            rVerticalDown = false;
+        }
+
         //create object at position of hand
         if (Input.GetButton("Fire1"))
         {
