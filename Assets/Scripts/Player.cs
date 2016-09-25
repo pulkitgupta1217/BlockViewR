@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
 
     Transform handTransform;
+    Transform modelTransform;
     Transform planeTransform;
 
     public GameObject lego11, lego12, lego13, lego14, lego22, lego23, lego24, lego13s, lego14s, lego23s, lego24s;
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         handTransform = GameObject.Find("Hand").transform;
-        planeTransform = GameObject.Find("Model").transform;
+        modelTransform = GameObject.Find("Model").transform;
         legos = new GameObject[11] { lego11, lego12, lego13, lego14, lego22, lego23, lego24, lego13s, lego14s, lego23s, lego24s };
         colors = new Dictionary<string, Color32>(){
             { "White", new Color32(244, 244, 244, 255) },
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
         lastObjs = new List<GameObject>();
         changeHand();
     }
+
     bool horizVertDown = false, horizDPadDown = false, vertDPad = false;
     // Update is called once per frame
     void Update()
@@ -111,7 +113,6 @@ public class Player : MonoBehaviour
             //right dpad
             legoIndex++;
             legoIndex %= 11;
-            legoRotation = Quaternion.identity;
             changeHand();
             horizDPadDown = true;
         }
@@ -123,7 +124,6 @@ public class Player : MonoBehaviour
             {
                 legoIndex = 10;
             }
-            legoRotation = Quaternion.identity;
             changeHand();
             horizDPadDown = true;
         }
@@ -174,19 +174,18 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             placeObject(legos[legoIndex]);
-            legoRotation = Quaternion.identity;
         }
 
         //zoom
-        if (Input.GetAxisRaw("RightTrigger") > 0.3f)
-        {
-            transform.position += Camera.main.transform.forward * 3f * Time.deltaTime;
-            //radius += 2f * Time.deltaTime;
-        }
-        else if (Input.GetAxisRaw("RightTrigger") < -0.3f && radius > 1)
+        if (Input.GetAxisRaw("RightTrigger") > 0.3f && radius > 1)
         {
             transform.position -= Camera.main.transform.forward * 3f * Time.deltaTime;
             //radius -= 2f * Time.deltaTime;
+        }
+        else if (Input.GetAxisRaw("RightTrigger") < -0.3f)
+        {
+            transform.position += Camera.main.transform.forward * 3f * Time.deltaTime;
+            //radius += 2f * Time.deltaTime;
         }
 
         // scan
@@ -213,6 +212,9 @@ public class Player : MonoBehaviour
     {
         Destroy(handTransform.GetChild(0).gameObject);
         Transform obj = (Instantiate(legos[legoIndex], handTransform) as GameObject).transform;
+        transform.GetComponent<BoxCollider>().isTrigger = true;
+        gameObject.AddComponent<Rigidbody>();
+        transform.GetComponent<Rigidbody>().useGravity = false;
         obj.rotation = legoRotation;
         obj.localPosition = Vector3.zero;
         int i = 0;
@@ -230,9 +232,9 @@ public class Player : MonoBehaviour
 
     void placeObject(GameObject lego)
     {
-        Transform obj = (Instantiate(lego, planeTransform) as GameObject).transform;
+        Transform obj = (Instantiate(lego, modelTransform) as GameObject).transform;
         obj.position = handTransform.position;
-        obj.rotation = legoRotation;
+        obj.rotation = handTransform.GetChild(0).rotation;
         int i = 0;
         foreach (KeyValuePair<string, Color32> entry in colors)
         {
@@ -244,5 +246,10 @@ public class Player : MonoBehaviour
         }
         lastObjs.Add(obj.gameObject);
         changeHand();
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        Debug.Log(other.name);
     }
 }

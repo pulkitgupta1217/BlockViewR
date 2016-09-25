@@ -4,13 +4,25 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
-
+    public GameObject tile;
     Dictionary<string, int> dict;
 
     // Use this for initialization
     void Start()
     {
         dict = new Dictionary<string, int>();
+        //createPlane();
+    }
+
+    void createPlane()
+    {
+        for (int i = -12; i < 13; i++)
+        {
+            for (int j = -12; j < 13; j++)
+            {
+                Instantiate(tile).transform.position = new Vector3(2*i, -1.2f, 2*j);
+            }
+        }
     }
 
     public void scan()
