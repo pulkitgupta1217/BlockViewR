@@ -11,7 +11,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         dict = new Dictionary<string, int>();
-        //createPlane();
+        createPlane();
     }
 
     void createPlane()
