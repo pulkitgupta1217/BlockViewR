@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         lastObjs = new List<GameObject>();
         changeHand();
     }
-    bool horizVertDown = false, rightTriggerDown = false, horizDPadDown = false, vertDPad = false;
+    bool horizVertDown = false, horizDPadDown = false, vertDPad = false;
     // Update is called once per frame
     void Update()
     {
