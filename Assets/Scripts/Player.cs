@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     Transform modelTransform;
     Transform planeTransform;
 
+    public static bool colliding = false;
+
     public GameObject lego11, lego12, lego13, lego14, lego22, lego23, lego24, lego13s, lego14s, lego23s, lego24s;
     GameObject[] legos;
     List<GameObject> lastObjs;
@@ -212,9 +214,11 @@ public class Player : MonoBehaviour
     {
         Destroy(handTransform.GetChild(0).gameObject);
         Transform obj = (Instantiate(legos[legoIndex], handTransform) as GameObject).transform;
-        transform.GetComponent<BoxCollider>().isTrigger = true;
-        gameObject.AddComponent<Rigidbody>();
-        transform.GetComponent<Rigidbody>().useGravity = false;
+        obj.tag = "Hand";
+        obj.gameObject.AddComponent<HandBlock>();
+        obj.GetComponent<BoxCollider>().isTrigger = true;
+        obj.gameObject.AddComponent<Rigidbody>();
+        obj.GetComponent<Rigidbody>().useGravity = false;
         obj.rotation = legoRotation;
         obj.localPosition = Vector3.zero;
         int i = 0;
@@ -232,6 +236,7 @@ public class Player : MonoBehaviour
 
     void placeObject(GameObject lego)
     {
+        if (colliding) return;
         Transform obj = (Instantiate(lego, modelTransform) as GameObject).transform;
         obj.position = handTransform.position;
         obj.rotation = handTransform.GetChild(0).rotation;
@@ -246,10 +251,5 @@ public class Player : MonoBehaviour
         }
         lastObjs.Add(obj.gameObject);
         changeHand();
-    }
-
-    void OnTriggerStay(Collider other)
-    {
-        Debug.Log(other.name);
     }
 }
