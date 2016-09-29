@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{A3D1A296-6BCD-4AC4-FCD5-CB3992AECD09}") = "BlockViewR", "Assembly-CSharp.csproj", "{9032BA4B-9BB6-778A-C6F0-D97C02362807}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9032BA4B-9BB6-778A-C6F0-D97C02362807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9032BA4B-9BB6-778A-C6F0-D97C02362807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9032BA4B-9BB6-778A-C6F0-D97C02362807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9032BA4B-9BB6-778A-C6F0-D97C02362807}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
