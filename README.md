@@ -8,6 +8,6 @@ I also demoed the project using the Oculus Rift to a panelist of judges and to a
 
 Screenshots:
 
-![Alt text](/Images/Image1.png?raw=true)
-![Alt text](/Images/Image2.png?raw=true)
-![Alt text](/Images/Image3.png?raw=true)
+![Alt text](/Images/Image1.JPG?raw=true)
+![Alt text](/Images/Image2.JPG?raw=true)
+![Alt text](/Images/Image3.JPG?raw=true)
