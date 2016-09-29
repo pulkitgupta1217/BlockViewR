@@ -1,4 +1,4 @@
-# Art Gallery Security System
+# BlockViewR
 
 For this project, I developed a virtual reality program to assemble models from Legos and then deconstruct them to build in real life.
 
